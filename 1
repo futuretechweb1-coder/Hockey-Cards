@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Cartes de Hockey</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #0b1d2a;
+  color: white;
+  text-align: center;
+}
+
+select {
+  padding: 10px;
+  margin: 10px;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  background: #122c3d;
+  padding: 10px;
+  border-radius: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🏒 Cartes de Hockey</h1>
+
+<!-- FILTRES -->
+<select id="teamFilter" onchange="updateDisplay()">
+  <option value="all">Toutes les équipes</option>
+  <option value="canadiens">Canadiens</option>
+  <option value="oilers">Oilers</option>
+  <option value="penguins">Penguins</option>
+</select>
+
+<select id="rarityFilter" onchange="updateDisplay()">
+  <option value="all">Toutes les raretés</option>
+  <option value="common">Commune</option>
+  <option value="rare">Rare</option>
+  <option value="legendary">Légendaire</option>
+</select>
+
+<select id="sortOption" onchange="updateDisplay()">
+  <option value="name">Trier par nom</option>
+  <option value="team">Trier par équipe</option>
+  <option value="year">Trier par année</option>
+  <option value="rarity">Trier par rareté</option>
+</select>
+
+<div class="container" id="cards"></div>
+
+<script>
+let cards = [
+  { name: "Connor McDavid", team: "oilers", year: 2023, rarity: "legendary" },
+  { name: "Sidney Crosby", team: "penguins", year: 2020, rarity: "rare" },
+  { name: "Cole Caufield", team: "canadiens", year: 2022, rarity: "rare" },
+  { name: "Nick Suzuki", team: "canadiens", year: 2021, rarity: "common" }
+];
+
+function updateDisplay() {
+  let team = document.getElementById("teamFilter").value;
+  let rarity = document.getElementById("rarityFilter").value;
+  let sort = document.getElementById("sortOption").value;
+
+  let filtered = cards.filter(card => {
+    return (team === "all" || card.team === team) &&
+           (rarity === "all" || card.rarity === rarity);
+  });
+
+  // TRI
+  filtered.sort((a, b) => {
+    if (sort === "year") return b.year - a.year;
+    return a[sort].toString().localeCompare(b[sort].toString());
+  });
+
+  displayCards(filtered);
+}
+
+function displayCards(list) {
+  let container = document.getElementById("cards");
+  container.innerHTML = "";
+
+  list.forEach(card => {
+    container.innerHTML += `
+      <div class="card">
+        <p><strong>${card.name}</strong></p>
+        <p>Équipe: ${card.team}</p>
+        <p>Année: ${card.year}</p>
+        <p>Rareté: ${card.rarity}</p>
+      </div>
+    `;
+  });
+}
+
+// affichage initial
+updateDisplay();
+</script>
+
+</body>
+</html>
